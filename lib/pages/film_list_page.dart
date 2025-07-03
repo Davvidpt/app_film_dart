@@ -13,10 +13,16 @@ class FilmListPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Genre: $genre')),
       body: FutureBuilder<List<Film>>(
-        future: dbHelper.getFilms(),
+        future: dbHelper.getFilmsByGenre(genre), // ← lebih efisien
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final films = snapshot.data!.where((film) => film.genre == genre).toList();
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error loading films.'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('Belum ada film untuk genre ini.'));
+          } else {
+            final films = snapshot.data!;
             return ListView.builder(
               itemCount: films.length,
               itemBuilder: (context, index) {
@@ -34,10 +40,6 @@ class FilmListPage extends StatelessWidget {
                 );
               },
             );
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error loading films.'));
-          } else {
-            return Center(child: CircularProgressIndicator());
           }
         },
       ),
