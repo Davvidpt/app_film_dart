@@ -292,6 +292,8 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
     super.initState();
     film = widget.film;
 
+     print('film.videoUrl: ${film.videoUrl} (${film.videoUrl.runtimeType})');
+
     final videoId = YoutubePlayer.convertUrlToId(film.videoUrl ?? '');
     _youtubeController = YoutubePlayerController(
       initialVideoId: videoId ?? '',
@@ -439,4 +441,6 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
     );
   }
 }
+
+
 

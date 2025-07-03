@@ -31,19 +31,20 @@ class _FilmFormPageState extends State<FilmFormPage> {
     }
   }
 
-  void _saveFilm() {
-    if (_formKey.currentState!.validate()) {
-      final film = Film(
-        id: widget.film?.id,
-        title: _titleController.text,
-        genre: _selectedGenre,
-        rating: double.tryParse(_ratingController.text) ?? 0.0,
-        videoUrl: _videoUrlController.text.isEmpty ? null : _videoUrlController.text,
-      );
-      widget.onSubmit(film);
-      Navigator.pop(context);
-    }
+void _saveFilm() {
+  if (_formKey.currentState!.validate()) {
+    final film = Film(
+      id: widget.film?.id,
+      title: _titleController.text,
+      genre: _selectedGenre,
+      rating: double.tryParse(_ratingController.text) ?? 0.0,
+      videoUrl: _videoUrlController.text.isEmpty ? null : _videoUrlController.text,
+    );
+    widget.onSubmit(film);
+    Navigator.pop(context, film);  // <-- Kirim hasil edit ke pemanggil
   }
+}
+
 
   @override
   void dispose() {
