@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../data_repository/dbhelper.dart';
 import '../models/film_model.dart';
@@ -57,6 +56,12 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               title: Text('Downloads'),
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DownloadPage())),
+            ),
+            ListTile(
+              title: Text('Logout'),
+              onTap: () {
+                Navigator.pushReplacementNamed(context, '/login');
+              },
             ),
           ],
         ),
@@ -216,5 +221,3 @@ class _HomePageState extends State<HomePage> {
     return id != null ? 'https://img.youtube.com/vi/$id/0.jpg' : null;
   }
 }
-
-

@@ -13,7 +13,7 @@ class DBHelper {
 
   Future<Database> initDB() async {
     String path = join(await getDatabasesPath(), 'film_app.db');
-    await deleteDatabase(path); // Ini code agar setiap inisiasi project database akan dihapus, penting agar data tidak menumpuk saat tahap development
+    //await deleteDatabase(path);
     return await openDatabase(
       path,
       version: 1,
@@ -28,6 +28,16 @@ class DBHelper {
           videoUrl TEXT
         )
       ''');
+
+      //tabel user
+      await db.execute('''
+        CREATE TABLE users (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          username TEXT UNIQUE,
+          password TEXT
+        )
+      ''');
+
         //Tabel History
       await db.execute('''
         CREATE TABLE history (
@@ -82,6 +92,31 @@ Future<List<Film>> getFilms() async {
     );
   });
 }
+
+//register
+Future<int> registerUser(String username, String password) async {
+  final db = await database;
+  try {
+    return await db.insert('users', {
+      'username': username,
+      'password': password,
+    });
+  } catch (e) {
+    print('Error saat register: $e');
+    return 0; // Jika gagal, misalnya karena username sudah digunakan
+  }
+}
+
+//login
+Future<Map<String, dynamic>?> loginUser(String username, String password) async {
+  final db = await database;
+  final result = await db.query('users',
+      where: 'username = ? AND password = ?', whereArgs: [username, password]);
+
+  if (result.isNotEmpty) return result.first;
+  return null;
+}
+
 
 // GET FILM BY GENRE
 Future<List<Film>> getFilmsByGenre(String genre) async {
